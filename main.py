@@ -24,7 +24,7 @@ concepts[3].setNextConcept(concepts[2])
 
 ctable = {}
 for c in concepts:
-    ctable[c.name] = [0, 0, 0, 0, 0]
+    ctable[c.name] = [0]*len(c.profile_qs)
 
 s1 = Student("s1", ctable)
 s2 = Student("s2", ctable)
