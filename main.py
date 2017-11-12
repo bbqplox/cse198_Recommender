@@ -1,30 +1,54 @@
 from Student import *
 from Concept import *
+from ConceptGraph import *
 from Question import *
+import random as rand
+import numpy as np
 
 def createDummyConcept(name):
     profilingQs = []
     recQs = []
-    for i in range(5):
-        profilingQs.append(ProfileQuestion("q" + str(i+1), "the question", "the answer", i))
-        recQs.append(RecQuestion("q" + str(i+1), "the question", "the answer", i*0.75))
+    for i in range(1, 6):
+        profilingQs.append(ProfileQuestion("q" + str(i), "the question", "the answer", i-1))
+        recQs.append(RecQuestion("q" + str(i), "the question", "the answer", i*0.75))
 
     c = Concept(name, profilingQs, recQs)
 
     return c
 
-concepts = []
-concepts.append(createDummyConcept("c1"))
-concepts.append(createDummyConcept("c2"))
-concepts.append(createDummyConcept("c3"))
-concepts.append(createDummyConcept("c4"))
-concepts[0].setNextConcept(concepts[1])
-concepts[1].setNextConcept(concepts[2])
-concepts[3].setNextConcept(concepts[2])
+def createDummyStudent(name, conceptgraph):
+    ctable = {}
+    for c in conceptgraph.concepts:
+        ctable[conceptgraph.concepts[c].name] = [0]*len(conceptgraph.concepts[c].profile_qs)
 
-ctable = {}
-for c in concepts:
-    ctable[c.name] = [0]*len(c.profile_qs)
+    s = Student(name, ctable)
 
-s1 = Student("s1", ctable)
-s2 = Student("s2", ctable)
+    return s
+
+# Todo
+def recommendConcept():
+    return
+
+# input: concept
+# output: RecQuestion with highest help_rating
+def recommendQuestion(concept):
+    q = max(concept.rec_qs, key=lambda item: item.help_rating)
+    return q
+
+
+#  simple concept map
+#  c1 -> c2 -> c3
+#              ^
+#              |
+#              c4
+conceptgraph = ConceptGraph()
+for i in range(1, 5):
+    conceptgraph.addConcept(createDummyConcept("c" + str(i)))
+
+conceptgraph.connectConcept(conceptgraph.concepts["c1"],conceptgraph.concepts["c2"])
+conceptgraph.connectConcept(conceptgraph.concepts["c2"],conceptgraph.concepts["c3"])
+conceptgraph.connectConcept(conceptgraph.concepts["c4"],conceptgraph.concepts["c3"])
+
+students = {}
+for i in range(1, 5):
+    students["s" + str(i)] = createDummyStudent("s" + str(i), conceptgraph)

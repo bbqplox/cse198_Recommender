@@ -11,7 +11,6 @@ class ProfileQuestion(Question):
         Question.__init__(self, n, d, a)
         self.label = l
 
-
 class RecQuestion(Question):
 
     def __init__(self, n, d, a, r):
